@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import Header from './Header';
 
-function App() {
-  return <div>Hello World!</div>;
-}
+require('style!bootstrap/dist/css/bootstrap.min.css');
+
+const propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.array,
+  ]),
+};
+
+const App = ({ children }) => (
+  <div>
+    <Header />
+    {children}
+  </div>
+);
+
+App.propTypes = propTypes;
 
 export default App;
