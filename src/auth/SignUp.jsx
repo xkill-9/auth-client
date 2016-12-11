@@ -1,8 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+
+import { signUpUser } from './authActions';
 
 const propTypes = {
+  signUpUser: PropTypes.func,
   handleSubmit: PropTypes.func,
+  errorMessage: PropTypes.string,
 };
 
 const validate = values => {
@@ -45,8 +50,19 @@ class SignUp extends Component {
     this.handleSignUp = this.handleSignUp.bind(this);
   }
 
-  handleSignUp({email, password, passwordConfirm}) {
+  handleSignUp({ email, password }) {
+    this.props.signUpUser(email, password);
+  }
 
+  renderAlert() {
+    if (this.props.errorMessage) {
+      return (
+        <div className="alert alert-danger">
+          <strong>Oops!</strong> {this.props.errorMessage}
+        </div>
+      );
+    }
+    return '';
   }
 
   render() {
@@ -72,6 +88,7 @@ class SignUp extends Component {
           type="password"
           name="passwordConfirm"
         />
+        {this.renderAlert()}
         <button type="submit" className="btn btn-primary">Sign Up</button>
       </form>
     );
@@ -86,4 +103,13 @@ const withForm = reduxForm({
   warn,
 })(SignUp);
 
-export default withForm;
+function mapStateToProps(state) {
+  return { errorMessage: state.auth.error };
+}
+
+const SignUpFormContainer = connect(
+  mapStateToProps,
+  { signUpUser }
+)(withForm);
+
+export default SignUpFormContainer;
